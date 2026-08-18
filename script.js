@@ -1,4 +1,4 @@
-// 1. Configuración de la Fecha y Transición de Mensaje
+// 1. Temporizador y Cuenta Regresiva
 const fechaCumple = new Date("2027-04-19T00:00:00").getTime();
 const countdownElement = document.getElementById("countdown");
 
@@ -8,9 +8,8 @@ const updateTimer = setInterval(() => {
 
   if (diferencia <= 0) {
     clearInterval(updateTimer);
-    // Cambiamos el contenedor completo para limpiar el texto "Esperando tu cumple..."
     const contenedorReloj = countdownElement.parentElement;
-    contenedorReloj.innerHTML = "<h2 style='color: #e91e63; font-size: 1.8rem; animation: pulse 1.5s infinite;'>¡FELIZ CUMPLEAÑOS! ❤️🎉</h2>";
+    contenedorReloj.innerHTML = "<h2 style='color: #e91e63; font-size: 1.8rem;'>¡FELIZ CUMPLEAÑOS! ❤️🎉</h2>";
     return;
   }
 
@@ -22,23 +21,16 @@ const updateTimer = setInterval(() => {
   countdownElement.innerHTML = `${dias} días ${horas}h ${minutos}m ${segundos}s`;
 }, 1000);
 
-// 2. Renderizado del Árbol en Canvas
+// 2. Configuración del Canvas
 const canvas = document.getElementById('treeCanvas');
 const ctx = canvas.getContext('2d');
 
 canvas.width = 400;
 canvas.height = 250;
 
-// Tronco
-ctx.fillStyle = "#8d6e63";
-ctx.beginPath();
-ctx.moveTo(190, 250);
-ctx.lineTo(210, 250);
-ctx.lineTo(205, 140);
-ctx.lineTo(195, 140);
-ctx.closePath();
-ctx.fill();
+const colors = ['#e91e63', '#ec407a', '#f48fb1', '#d81b60', '#ff4081', '#c2185b'];
 
+// Función para dibujar un corazón en una posición específica
 function drawHeart(x, y, size, color) {
   ctx.save();
   ctx.beginPath();
@@ -51,47 +43,66 @@ function drawHeart(x, y, size, color) {
   ctx.restore();
 }
 
-const colors = ['#e91e63', '#ec407a', '#f48fb1', '#d81b60', '#ff4081', '#c2185b'];
-
+// Generamos la estructura estática del copa del árbol una sola vez
+const staticTreeHearts = [];
 for (let i = 0; i < 200; i++) {
   let angle = Math.random() * Math.PI * 2;
   let r = Math.sqrt(Math.random()) * 65; 
-  let x = 200 + r * Math.cos(angle);
-  let y = 90 + r * Math.sin(angle);
-  let size = Math.random() * 8 + 6;
-  let color = colors[Math.floor(Math.random() * colors.length)];
-  
-  drawHeart(x, y, size, color);
-}
-
-// 3. Animación de Pétalos/Corazones Cayendo
-const fallingHearts = [];
-for (let i = 0; i < 15; i++) {
-  fallingHearts.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 4 + 4,
-    speedY: Math.random() * 1 + 0.5,
-    speedX: Math.sin(Math.random() * Math.PI) * 0.5,
+  staticTreeHearts.push({
+    x: 200 + r * Math.cos(angle),
+    y: 90 + r * Math.sin(angle),
+    size: Math.random() * 8 + 6,
     color: colors[Math.floor(Math.random() * colors.length)]
   });
 }
 
-function animateFallingHearts() {
-  // Limpia solo el área de caída sin borrar el árbol estático
-  fallingHearts.forEach(heart => {
-    heart.y += heart.speedY;
-    heart.x += heart.speedX;
-
-    if (heart.y > canvas.height) {
-      heart.y = -10;
-      heart.x = Math.random() * canvas.width;
-    }
-
-    drawHeart(heart.x, heart.y, heart.size, heart.color);
+// Generamos los pétalos/corazones animables
+const fallingHearts = [];
+for (let i = 0; i < 25; i++) {
+  fallingHearts.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 6 + 4,
+    speedY: Math.random() * 1 + 0.5,
+    speedX: (Math.random() - 0.5) * 0.5,
+    color: colors[Math.floor(Math.random() * colors.length)]
   });
-
-  requestAnimationFrame(animateFallingHearts);
 }
 
-animateFallingHearts();
+// 3. Bucle Principal de Animación
+function animate() {
+  // Limpia completamente el lienzo en cada fotograma
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Dibuja el Tronco
+  ctx.fillStyle = "#8d6e63";
+  ctx.beginPath();
+  ctx.moveTo(190, 250);
+  ctx.lineTo(210, 250);
+  ctx.lineTo(205, 140);
+  ctx.lineTo(195, 140);
+  ctx.closePath();
+  ctx.fill();
+
+  // Dibuja la Copa del Árbol (Corazones fijos)
+  staticTreeHearts.forEach(h => drawHeart(h.x, h.y, h.size, h.color));
+
+  // Actualiza y Dibuja los Corazones que Caen
+  fallingHearts.forEach(h => {
+    h.y += h.speedY;
+    h.x += h.speedX;
+
+    // Si llega al fondo, vuelve a subir arriba
+    if (h.y > canvas.height) {
+      h.y = -10;
+      h.x = Math.random() * canvas.width;
+    }
+
+    drawHeart(h.x, h.y, h.size, h.color);
+  });
+
+  requestAnimationFrame(animate);
+}
+
+// Inicia la animación en vivo
+animate();
