@@ -1,4 +1,4 @@
-const fechaCumple = new Date().getTime() + 5000;
+const fechaCumple = new Date("2027-04-19T00:00:00").getTime();
 const countdownElement = document.getElementById("countdown");
 
 const updateTimer = setInterval(() => {
