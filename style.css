@@ -1,0 +1,74 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #fce4ec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.card-container {
+  background: #fffdfa;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#treeCanvas {
+  width: 100%;
+  height: 250px;
+  display: block;
+}
+
+.message-box {
+  margin-top: 15px;
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.message-box h2 {
+  color: #d32f2f;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.message-box p {
+  margin-bottom: 8px;
+}
+
+.message-box .highlight {
+  font-weight: bold;
+  color: #c2185b;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1.1rem;
+}
+
+.timer-box {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed #f8bbd0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+#countdown {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #d32f2f;
+  margin-top: 5px;
+}
