@@ -21,7 +21,7 @@ const updateTimer = setInterval(() => {
   countdownElement.innerHTML = `${dias} días ${horas}h ${minutos}m ${segundos}s`;
 }, 1000);
 
-// 2. Configuración del Canvas
+// 2. Configuración del Canvas y Árbol
 const canvas = document.getElementById('treeCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -30,7 +30,6 @@ canvas.height = 250;
 
 const colors = ['#e91e63', '#ec407a', '#f48fb1', '#d81b60', '#ff4081', '#c2185b'];
 
-// Función para dibujar un corazón en una posición específica
 function drawHeart(x, y, size, color) {
   ctx.save();
   ctx.beginPath();
@@ -43,7 +42,6 @@ function drawHeart(x, y, size, color) {
   ctx.restore();
 }
 
-// Generamos la estructura estática del copa del árbol una sola vez
 const staticTreeHearts = [];
 for (let i = 0; i < 200; i++) {
   let angle = Math.random() * Math.PI * 2;
@@ -56,7 +54,6 @@ for (let i = 0; i < 200; i++) {
   });
 }
 
-// Generamos los pétalos/corazones animables
 const fallingHearts = [];
 for (let i = 0; i < 25; i++) {
   fallingHearts.push({
@@ -71,7 +68,6 @@ for (let i = 0; i < 25; i++) {
 
 // 3. Bucle Principal de Animación
 function animate() {
-  // Limpia completamente el lienzo en cada fotograma
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Dibuja el Tronco
@@ -92,7 +88,6 @@ function animate() {
     h.y += h.speedY;
     h.x += h.speedX;
 
-    // Si llega al fondo, vuelve a subir arriba
     if (h.y > canvas.height) {
       h.y = -10;
       h.x = Math.random() * canvas.width;
@@ -104,5 +99,37 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// Inicia la animación en vivo
 animate();
+
+// 4. Lógica del Botón Interactivo "Razones por las que te amo"
+const razones = [
+  "Amo tu forma única de hacerme sonreír en cualquier momento. ❤️",
+  "Amo lo increíble que eres y todo el apoyo que me das siempre.",
+  "Amo compartir mis días y proyectos contigo.",
+  "Eres mi persona favorita en todo el mundo. ✨",
+  "Amo la manera en que iluminas mi vida con tu presencia.",
+  "Gracias por existir y por hacerme tan feliz cada día."
+];
+
+const btnRazon = document.getElementById("btnRazon");
+const textoRazon = document.getElementById("textoRazon");
+let ultimoIndice = -1;
+
+if (btnRazon && textoRazon) {
+  btnRazon.addEventListener("click", () => {
+    let nuevoIndice;
+    do {
+      nuevoIndice = Math.floor(Math.random() * razones.length);
+    } while (nuevoIndice === ultimoIndice && razones.length > 1);
+    
+    ultimoIndice = nuevoIndice;
+
+    textoRazon.style.opacity = 0;
+    textoRazon.style.transition = "opacity 0.2s ease";
+
+    setTimeout(() => {
+      textoRazon.innerText = razones[nuevoIndice];
+      textoRazon.style.opacity = 1;
+    }, 200);
+  });
+}
